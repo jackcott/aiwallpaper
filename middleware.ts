@@ -2,7 +2,12 @@ import { NextResponse } from "next/server";
 import { authMiddleware } from "@clerk/nextjs";
 
 export default authMiddleware({
-  publicRoutes: ["/", "/pricing", "/api/get-wallpapers", "/api/get-user-info"],
+  publicRoutes: [
+    "/",
+    "/pricing",
+    "/api/get-wallpapers",
+    "/api/get-user-info"
+  ],
 
   afterAuth(auth, req, evt) {
     if (!auth.userId && !auth.isPublicRoute) {
@@ -21,5 +26,9 @@ export default authMiddleware({
 });
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api)(.*)"],
+  runtime: "nodejs", // ✅ 强制使用 Node.js Runtime
+  matcher: [
+    "/dashboard/:path*",        // ✅ 仅保护 dashboard 页面
+    "/api/protected/:path*",    // ✅ 仅保护特定 API
+  ],
 };
